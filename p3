@@ -1,0 +1,78 @@
+code1
+
+import openai
+import os
+from dotenv import load_dotenv, find_dotenv
+
+_ = load_dotenv(find_dotenv())
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+def get_completion(prompt, model="gpt-3.5-turbo"):
+    messages = [{"role": "user", "content": prompt}]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0,  # this is the degree of randomness of the model's output
+    )
+    return response.choices[0].message["content"]
+
+def summarize_text(text):
+    prompt = f"""
+    Summarize the text delimited by triple backticks          #here i have included one function called summarize 
+    into a single sentence.
+    ```{text}```
+    """
+    return get_completion(prompt)
+
+def generate_book_list():
+    prompt = """
+    Generate a list of three made-up book titles along      #here i have included one function called generate_book_list
+    with their authors and genres. 
+    Provide them in JSON format with the following keys: 
+    book_id, title, author, genre.
+    """
+    return get_completion(prompt)
+
+# First prompt
+text_1 = """
+You should express what you want a model to do by 
+providing instructions that are as clear and 
+specific as you can possibly make them. 
+This will guide the model towards the desired output, 
+and reduce the chances of receiving irrelevant 
+or incorrect responses. Don't confuse writing a 
+clear prompt with writing a short prompt. 
+In many cases, longer prompts provide more clarity 
+and context for the model, which can lead to 
+more detailed and relevant outputs.
+"""
+
+response_1 = summarize_text(text_1)
+print("Response 1:", response_1)
+
+output:
+Response 1: Clear and specific instructions are essential for guiding a model towards the desired output and reducing the chances 
+of irrelevant or incorrect responses, with longer prompts often providing more clarity and context for more detailed and relevant outputs.
+
+
+
+
+code2
+def summarize_text_with_positive_sentiment(text):
+    prompt = f"""
+    Summarize the given text in a positive way, providing an uplifting and optimistic summary.
+    ```{text}```                                                                                     #here there you can see sentiment in positive way.
+    """
+    return get_completion(prompt) 
+positive_response_1 = summarize_text_with_positive_sentiment(text_1)
+print("Positive Response 1:", positive_response_1)
+
+
+
+output:
+Positive Response 1: Providing clear and specific instructions to a model is key to achieving the desired output.
+Longer prompts can offer more clarity and context, leading to more detailed and relevant responses. By being clear in our
+instructions, we can guide the model towards success and minimize the chances of receiving irrelevant or incorrect information.
+
+
